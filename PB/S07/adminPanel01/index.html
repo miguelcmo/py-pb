@@ -1,0 +1,79 @@
+    <!doctype html>
+    <html lang="es">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gestión de Tareas - Profesional</title>
+    <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+    <div class="app">
+        <aside class="sidebar">
+        <div class="brand">Koru — Gestión de Tareas</div>
+        <ul class="nav">
+            <li class="active" data-section="tareas">Tareas</li>
+            <li data-section="proyectos">Proyectos</li>
+            <li data-section="empleados">Empleados</li>
+        </ul>
+        <div style="margin-top:auto; font-size:13px; color:#cfe8ff">Usuario: Coordinador</div>
+        </aside>
+
+        <div>
+        <header>
+            <div class="container" style="display:flex; gap:12px; align-items:center; width:100%">
+            <h2 style="margin:0">Panel de Tareas</h2>
+            <div class="small" style="margin-left:12px">Centraliza los avances de tus empleados</div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+            <section id="section-tareas" class="card">
+                <h3>Registrar tarea</h3>
+                <form id="taskForm">
+                <div class="row">
+                    <div class="col">
+                    <label for="employee">Empleado</label>
+                    <input id="employee" required type="text" placeholder="Nombre del empleado" />
+                    </div>
+                    <div class="col">
+                    <label for="project">Proyecto</label>
+                    <input id="project" required type="text" placeholder="Nombre del proyecto" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" placeholder="Descripción breve de la actividad"></textarea>
+                    </div>
+                    <div style="width:180px">
+                    <label for="duration">Duración (hrs)</label>
+                    <input id="duration" required type="number" min="0" step="0.25" value="1" />
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end">
+                    <button type="button" class="btn btn-ghost" id="resetBtn">Limpiar</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Agregar tarea</button>
+                </div>
+                </form>
+            </section>
+
+            <section class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0">Tareas registradas</h3>
+                <div>
+                    <label class="small">Filtrar por proyecto</label>
+                    <input id="filterProject" type="text" placeholder="Nombre proyecto" style="padding:8px 10px; border-radius:8px; border:1px solid #e6eef7" />
+                </div>
+                </div>
+
+                <div id="tasksList" style="margin-top:12px"></div>
+            </section>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    </body>
+    </html>

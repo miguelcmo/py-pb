@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Select dependiente Colombia</title>
+</head>
+<body>
+
+    <h2>Seleccionar Departamento y Municipio</h2>
+
+    <label>Departamento:</label>
+    <select id="departamento">
+        <option value="">-- Seleccione --</option>
+        <option value="Boyacá">Boyacá</option>
+        <option value="Cundinamarca">Cundinamarca</option>
+        <option value="Santander">Santander</option>
+    </select>
+
+    <br><br>
+
+    <label>Municipio:</label>
+    <select id="municipio">
+        <option value="">--Seleccione un departamento--</option>
+    </select>
+
+    <script>
+        const departamentos = {
+            "Boyacá": ["Tunja", "Duitama", "Sogamoso", "Paipa"],
+            "Cundinamarca": ["Bogotá", "Zipaquirá", "Chía", "Soacha"],
+            "Santander": ["Bucaramanga", "Girón", "Floridablanca", "Barrancabermeja"]
+        };
+
+        const selectDepartamento = document.getElementById("departamento");
+        const selectMunicipio = document.getElementById("municipio");
+
+        selectDepartamento.addEventListener("change", function() {
+            const depto = this.value;
+
+            selectMunicipio.innerHTML = "<option value=''>-- Seleccione --</option>";
+
+            if (!depto) return;
+
+            departamentos[depto].forEach(function(muni) {
+                const option = document.createElement("option");
+                option.value = muni;
+                option.textContent = muni;
+                selectMunicipio.appendChild(option);
+            });
+        });
+    </script>
+
+</body>
+</html>

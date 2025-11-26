@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventario - Versión Simple</title>
+  <!-- Bootstrap CDN para versión simple -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{background:#f8fafc; font-family:Inter,system-ui,Arial, sans-serif; padding:24px;}
+    .app{max-width:1100px; margin:0 auto}
+    .card-product img{max-width:100%; height:160px; object-fit:cover; border-radius:6px}
+    .stock-low{color:#b91c1c; font-weight:700}
+    .stock-ok{color:#065f46; font-weight:700}
+    .view-toggle{margin-bottom:12px}
+    .pointer{cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Inventario - Tienda</h3>
+      <div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">Agregar producto</button>
+      </div>
+    </div>
+
+    <div class="card mb-3 p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="small text-muted">Buscar / Filtrar</div>
+          <input id="search" class="form-control" placeholder="Nombre o referencia">
+        </div>
+        <div class="view-toggle">
+          <button class="btn btn-outline-secondary btn-sm" id="btnTable">Vista tabla</button>
+          <button class="btn btn-outline-secondary btn-sm" id="btnCards">Vista cards</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="productsContainer"></div>
+  </div>
+
+  <!-- Modal para producto -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="productForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Nombre</label>
+            <input id="pName" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Referencia</label>
+            <input id="pRef" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Cantidad</label>
+            <input id="pQty" type="number" class="form-control" min="0" value="0" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">URL foto (opcional)</label>
+            <input id="pPhoto" class="form-control" placeholder="https://...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal movimientos -->
+  <div class="modal fade" id="moveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="moveForm" class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Registrar movimiento</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <input id="mProductId" type="hidden">
+          <div class="mb-2">
+            <label class="form-label">Tipo</label>
+            <select id="mType" class="form-select"><option value="in">Entrada</option><option value="out">Salida</option></select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Cantidad</label>
+            <input id="mQty" type="number" min="1" value="1" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Nota (opcional)</label>
+            <input id="mNote" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary">Registrar</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // localStorage key
+    const KEY = 'koru_products_v1';
+    let products = JSON.parse(localStorage.getItem(KEY) || '[]');
+    let currentView = 'cards'; // default
+
+    const productsContainer = document.getElementById('productsContainer');
+    const search = document.getElementById('search');
+    const btnTable = document.getElementById('btnTable');
+    const btnCards = document.getElementById('btnCards');
+
+    document.getElementById('productForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const id = Date.now().toString();
+      const name = document.getElementById('pName').value.trim();
+      const ref = document.getElementById('pRef').value.trim();
+      const qty = Number(document.getElementById('pQty').value);
+      const photo = document.getElementById('pPhoto').value.trim();
+      products.push({id,name,ref,qty,photo});
+      localStorage.setItem(KEY, JSON.stringify(products));
+      // Cerrar modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+      modal.hide();
+      e.target.reset();
+      renderProducts();
+    });
+
+    document.getElementById('moveForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const id = document.getElementById('mProductId').value;
+      const type = document.getElementById('mType').value;
+      const qty = Number(document.getElementById('mQty').value);
+      const product = products.find(p=>p.id===id);
+      if(!product) return alert('Producto no encontrado');
+      if(type === 'out' && product.qty < qty) return alert('Cantidad insuficiente');
+      product.qty += (type === 'in' ? qty : -qty);
+      localStorage.setItem(KEY, JSON.stringify(products));
+      bootstrap.Modal.getInstance(document.getElementById('moveModal')).hide();
+      renderProducts();
+    });
+
+    btnTable.addEventListener('click', ()=>{ currentView='table'; renderProducts(); });
+    btnCards.addEventListener('click', ()=>{ currentView='cards'; renderProducts(); });
+    search.addEventListener('input', renderProducts);
+
+    function renderProducts(){
+      const q = search.value.trim().toLowerCase();
+      const list = products.filter(p => p.name.toLowerCase().includes(q) || p.ref.toLowerCase().includes(q));
+      if(list.length === 0){ productsContainer.innerHTML = '<div class="alert alert-secondary">No hay productos</div>'; return; }
+
+      if(currentView === 'table'){
+        let html = '<table class="table table-striped"><thead><tr><th>Foto</th><th>Producto</th><th>Referencia</th><th>Cantidad</th><th>Acciones</th></tr></thead><tbody>';
+        for(const p of list){
+          const stockClass = p.qty <= 2 ? 'stock-low' : 'stock-ok';
+          html += `<tr>
+            <td style="width:120px"><img src="${p.photo || 'https://via.placeholder.com/120x80?text=Producto'}" style="width:120px; height:80px; object-fit:cover; border-radius:6px" /></td>
+            <td>${escapeHtml(p.name)}</td>
+            <td>${escapeHtml(p.ref)}</td>
+            <td class="${stockClass}">${p.qty}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary" onclick="openMove('${p.id}')">Movimiento</button>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${p.id}')">Eliminar</button>
+            </td>
+          </tr>`;
+        }
+        html += '</tbody></table>';
+        productsContainer.innerHTML = html;
+      } else {
+        // cards
+        let html = '<div class="row">';
+        for(const p of list){
+          const stockClass = p.qty <= 2 ? 'stock-low' : 'stock-ok';
+          html += `<div class="col-md-4 mb-3">
+            <div class="card card-product">
+              <img src="${p.photo || 'https://via.placeholder.com/400x250?text=Producto'}" class="card-img-top" alt="${escapeHtml(p.name)}">
+              <div class="card-body">
+                <h5 class="card-title">${escapeHtml(p.name)}</h5>
+                <p class="card-text small">Ref: ${escapeHtml(p.ref)}</p>
+                <p class="${stockClass}">Cantidad: ${p.qty}</p>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-primary" onclick="openMove('${p.id}')">Movimiento</button>
+                  <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${p.id}')">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }
+        html += '</div>';
+        productsContainer.innerHTML = html;
+      }
+    }
+
+    function openMove(id){
+      document.getElementById('mProductId').value = id;
+      document.getElementById('mQty').value = 1;
+      document.getElementById('mNote').value = '';
+      const modal = new bootstrap.Modal(document.getElementById('moveModal'));
+      modal.show();
+    }
+
+    function deleteProduct(id){
+      if(!confirm('Eliminar producto?')) return;
+      products = products.filter(p=>p.id !== id);
+      localStorage.setItem(KEY, JSON.stringify(products));
+      renderProducts();
+    }
+
+    function escapeHtml(unsafe){
+      return String(unsafe).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}[m]));
+    }
+
+    // Demo: si no hay datos, crear algunos
+    if(products.length === 0){
+      products = [
+        {id:'p1', name:'Camiseta básica', ref:'CB-001', qty:10, photo:''},
+        {id:'p2', name:'Taza cerámica', ref:'TZ-122', qty:2, photo:''},
+        {id:'p3', name:'Libreta A5', ref:'LB-55', qty:5, photo:''}
+      ];
+      localStorage.setItem(KEY, JSON.stringify(products));
+    }
+    renderProducts();
+
+    // Hacer funciones globales para botones inline
+    window.openMove = openMove;
+    window.deleteProduct = deleteProduct;
+    window.renderProducts = renderProducts;
+  </script>
+</body>
+</html>

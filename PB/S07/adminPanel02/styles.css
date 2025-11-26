@@ -1,0 +1,4 @@
+body{ background:#f8fafc; font-family:Inter,system-ui,Arial, sans-serif; }
+.card-product img{ max-width:100%; height:160px; object-fit:cover; border-radius:6px; }
+.stock-low{ color:#b91c1c; font-weight:700; }
+.stock-ok{ color:#065f46; font-weight:700; }

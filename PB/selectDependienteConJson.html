@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Select dependiente usando JSON</title>
+</head>
+<body>
+
+    <h2>Departamento</h2>
+
+    <label for="departamento">Departamento:</label>
+    <select id="departamento">
+        <option value="">-- Seleccione --</option>
+    </select>
+
+    <br><br>
+
+    <label for="municipio">Municipio:</label>
+    <select id="municipio">
+        <option value="">-- Seleccione un departamento --</option>
+    </select>
+
+    <script>
+
+        fetch("colombia.json")
+        .then(res => res.json())
+        .then(data => {
+            const selectDepartamento = document.getElementById("departamento");
+        const selectMunicipio = document.getElementById("municipio");
+
+    
+        data.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.departamento;
+            option.textContent = item.departamento;
+            selectDepartamento.appendChild(option);
+        });
+
+   
+        selectDepartamento.addEventListener("change", function() {
+            const departamentoSeleccionado = this.value;
+
+            selectMunicipio.innerHTML = "<option value=''>-- Seleccione --</option>";
+
+            if (!departamentoSeleccionado) return;
+
+            const dep = data.find(item => item.departamento === departamentoSeleccionado);
+
+            dep.ciudades.forEach(muni => {
+                const option = document.createElement("option");
+                option.value = muni;
+                option.textContent = muni;
+                selectMunicipio.appendChild(option);
+            });
+        });
+        });
+        
+    </script>
+
+</body>
+</html>
