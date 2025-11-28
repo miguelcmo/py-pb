@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Biblioteca</title>
+</head>
+<body>
+    <h1>Mini Sistema de Préstamos</h1>
+    <hr>
+
+    {% if session.get("user") %}
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a> |
+        <a href="{{ url_for('add_book') }}">Agregar Libro</a> |
+        <a href="{{ url_for('show_loans') }}">Préstamos</a> |
+        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+    </nav>
+    {% endif %}
+
+    <hr>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

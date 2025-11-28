@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Préstamos registrados</h2>
+
+{% if loans %}
+<ul>
+    {% for loan in loans %}
+    <li>
+        {{ loan.book.title }} — Prestado a: <strong>{{ loan.borrower }}</strong>
+        <a href="{{ url_for('return_book', book_id=loan.book.id) }}">[Devolver]</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No hay préstamos registrados.</p>
+{% endif %}
+{% endblock %}

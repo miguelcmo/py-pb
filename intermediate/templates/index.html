@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Libros disponibles</h2>
+
+<ul>
+    {% for book in books %}
+    <li>
+        {{ book.title }} — {{ book.author }}
+        <a href="{{ url_for('borrow', book_id=book.id) }}">[Prestar]</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
