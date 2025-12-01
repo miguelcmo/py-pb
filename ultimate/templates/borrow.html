@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card p-4">
+    <h3>Prestar libro</h3>
+
+    <p class="mb-4">
+        <strong>{{ book.title }}</strong><br>
+        <span class="text-muted">{{ book.author }}</span>
+    </p>
+
+    <form method="POST">
+        <label class="form-label">Nombre del solicitante</label>
+        <input type="text" name="borrower" class="form-control" required>
+
+        <button class="btn btn-primary mt-4">Registrar préstamo</button>
+    </form>
+</div>
+{% endblock %}

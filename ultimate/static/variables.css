@@ -1,0 +1,28 @@
+/* ===== Variables personalizadas para Bootstrap ===== */
+
+:root {
+    /* Colores principales */
+    --bs-primary: #0066cc;
+    --bs-primary-rgb: 0, 102, 204;
+
+    --bs-secondary: #6c757d;
+    --bs-success: #2ecc71;
+    --bs-danger: #e74c3c;
+    --bs-warning: #f1c40f;
+    --bs-info: #3498db;
+
+    /* Colores personalizados de la app */
+    --brand-bg: #f8fafc;
+    --brand-card-bg: #ffffff;
+    --brand-border: #e3e7ed;
+
+    /* Tipografía */
+    --bs-body-font-family: "Segoe UI", Roboto, sans-serif;
+
+    /* Bordes */
+    --bs-border-radius: 8px;
+    --bs-border-radius-lg: 12px;
+
+    /* Sombra ligera para tarjetas */
+    --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}

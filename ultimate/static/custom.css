@@ -1,0 +1,44 @@
+body {
+    background-color: var(--brand-bg);
+}
+
+/* Contenedor central */
+.main-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Tarjetas con sombra suave */
+.card {
+    background-color: var(--brand-card-bg);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--brand-border);
+}
+
+/* Barra de navegación */
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Formularios */
+form input,
+form button {
+    margin-top: 8px;
+}
+
+/* Listas */
+.book-item,
+.loan-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.book-item:last-child,
+.loan-item:last-child {
+    border-bottom: none;
+}
+
+.logo-teca {
+    color:chartreuse
+}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="mb-3">Préstamos registrados</h3>
+
+<div class="card p-3">
+    {% if loans %}
+        {% for loan in loans %}
+        <div class="loan-item d-flex justify-content-between">
+            <div>
+                <strong>{{ loan.book.title }}</strong><br>
+                <small>Prestado a <strong>{{ loan.borrower }}</strong></small>
+            </div>
+
+            <a class="btn btn-warning btn-sm" href="{{ url_for('return_book', book_id=loan.book.id) }}">
+                Devolver
+            </a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No hay préstamos registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

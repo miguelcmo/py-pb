@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width: 400px;">
+    <h3 class="mb-3 text-center">Iniciar sesión</h3>
+
+    <form method="POST">
+        <input class="form-control" type="text" name="username" placeholder="Usuario" required>
+        <input class="form-control" type="password" name="password" placeholder="Contraseña" required>
+
+        <button class="btn btn-primary w-100 mt-3" type="submit">Entrar</button>
+    </form>
+
+    {% if error %}
+        <p class="text-danger mt-3 text-center">{{ error }}</p>
+    {% endif %}
+</div>
+{% endblock %}
